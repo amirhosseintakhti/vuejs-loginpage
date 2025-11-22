@@ -1,8 +1,30 @@
 <script setup>
+import { useUserStore } from '@/stores/userStore';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 
-const email = ref()
+const email = ref('')
+const password = ref('')
+const userStore = useUserStore()
+const router = useRouter()
+
+function inputhandler(){
+  const users = JSON.parse( localStorage.getItem("users") || [] )
+
+  const foundUser = users.find(
+    user => user.email == email.value && user.password == password.value
+  )
+  if(!foundUser){
+    alert("invalid credential")
+    return
+  }
+
+  localStorage.setItem("currentUser" , JSON.stringify(foundUser))
+  userStore.setUser(foundUser)
+  router.push("/dashboard")
+
+}
 
 </script>
 
